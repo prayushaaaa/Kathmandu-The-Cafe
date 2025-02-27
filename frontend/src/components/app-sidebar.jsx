@@ -1,6 +1,7 @@
 import { Frame, PieChart } from "lucide-react";
 
 import { NavProjects } from "@/components/nav-projects";
+import { NavMain } from "./nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -18,27 +19,27 @@ const data = {
   },
   projects: [
     {
-      name: "Dashboard",
+      title: "Dashboard",
       url: "/",
       icon: PieChart,
     },
     {
-      name: "Sales",
+      title: "Sales",
       url: "/sales",
       icon: Frame,
     },
     {
-      name: "Expenses",
+      title: "Expenses",
       url: "/expenses",
       icon: Frame,
     },
     {
-      name: "Menu",
+      title: "Menu",
       url: "/menu",
       icon: Frame,
     },
     {
-      name: "Customers",
+      title: "Customers",
       url: "/customers",
       icon: Frame,
     },
@@ -52,7 +53,7 @@ export function AppSidebar({ ...props }) {
         <NavUser user={data.user} />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={data.projects} />
+        <NavMain items={data.projects} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
