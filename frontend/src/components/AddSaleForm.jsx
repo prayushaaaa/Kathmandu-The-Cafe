@@ -105,8 +105,7 @@ function AddSaleForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border rounded-md">
-      <label className="block mt-3 mb-2">Customer Name:</label>
+    <form onSubmit={handleSubmit}>
       <Input
         type="text"
         name="customer_name"
@@ -115,30 +114,41 @@ function AddSaleForm() {
         onChange={(e) =>
           setFormData({ ...formData, customer_name: e.target.value })
         }
-        className="mt-3"
+        className="mt-3 w-full"
         required
       />
 
+      {/* Responsive Table */}
       <div className="overflow-x-auto mt-4">
-        <table className="min-w-full table-auto">
+        <table className="min-w-full table-auto border-collapse">
           <thead>
-            <tr>
-              <th className="px-4 py-2 border">Food Item</th>
-              <th className="px-4 py-2 border">Quantity</th>
-              <th className="px-4 py-2 border">Price per Unit</th>
-              <th className="px-4 py-2 border">Total Price</th>
-              <th className="px-4 py-2 border">Action</th>
+            <tr className="bg-gray-100">
+              <th className="px-5 py-2 border w-auto max-w-[250px] whitespace-nowrap">
+                Food Item
+              </th>
+              <th className="px-4 py-2 border w-auto max-w-[80px] whitespace-nowrap">
+                Qty.
+              </th>
+              <th className="px-4 py-2 border w-auto max-w-[120px] whitespace-nowrap">
+                Rate
+              </th>
+              <th className="px-4 py-2 border w-auto max-w-[120px] whitespace-nowrap">
+                Total
+              </th>
+              <th className="px-4 py-2 border w-auto max-w-[100px] whitespace-nowrap">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
             {formData.items.map((item, index) => (
-              <tr key={index}>
-                <td className="px-4 py-2 border">
+              <tr key={index} className="text-center">
+                <td className="px-2 py-2 border w-auto max-w-[250px]">
                   <select
-                    name="id" // Change name from 'item_id' to 'id'
+                    name="id"
                     value={item.id}
                     onChange={(e) => handleChange(e, index)}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded-md"
                     required
                   >
                     <option value="">Select an item</option>
@@ -149,29 +159,27 @@ function AddSaleForm() {
                     ))}
                   </select>
                 </td>
-                <td className="px-4 py-2 border">
+                <td className="px-2 py-2 border w-auto max-w-[80px]">
                   <Input
                     type="number"
                     name="quantity"
                     value={item.quantity}
                     onChange={(e) => handleChange(e, index)}
-                    className="w-full p-2 border rounded"
+                    className="w-full border rounded-md"
                     required
                   />
                 </td>
-                <td className="px-4 py-2 border">
-                  Rs. {items.find((i) => i.id == item.id)?.price || 0}{" "}
-                  {/* Display price per unit */}
+                <td className="px-4 py-2 border w-auto max-w-[120px]">
+                  Rs. {items.find((i) => i.id == item.id)?.price || 0}
                 </td>
-                <td className="px-4 py-2 border">
-                  Rs. {item.total_price}{" "}
-                  {/* Display the total price for the item */}
+                <td className="px-4 py-2 border w-auto max-w-[120px]">
+                  Rs. {item.total_price}
                 </td>
-                <td className="px-4 py-2 border">
+                <td className="px-4 py-2 border w-auto max-w-[100px]">
                   <Button
                     type="button"
                     onClick={() => removeItemRow(index)}
-                    className="bg-red-500 hover:bg-red-600"
+                    className="bg-red-500 hover:bg-red-600 p-1"
                   >
                     <LucideTrash />
                   </Button>
@@ -182,32 +190,36 @@ function AddSaleForm() {
         </table>
       </div>
 
-      <Button type="button" onClick={addItemRow} className="mt-4">
-        Add Another Item
-      </Button>
-
-      <div className="mt-4">
-        <span className="font-bold">
+      {/* Buttons - Responsive Layout */}
+      <div className="flex flex-col sm:flex-row sm:justify-between mt-4 gap-2">
+        <Button type="button" onClick={addItemRow} className="w-full sm:w-auto">
+          Add Another Item
+        </Button>
+        <span className="font-bold text-center sm:text-right">
           Total Bill: Rs. {calculateTotalBill()}
         </span>
       </div>
 
-      <p className="mt-3 mb-2 text-black">Choose a payment method</p>
-      <RadioGroup
-        value={formData.payment_method}
-        onValueChange={(value) =>
-          setFormData({ ...formData, payment_method: value })
-        }
-      >
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="cash" id="cash" />
-          <Label htmlFor="cash">Cash</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="esewa" id="esewa" />
-          <Label htmlFor="esewa">Esewa</Label>
-        </div>
-      </RadioGroup>
+      {/* Payment Method - Responsive */}
+      <div>
+        <p className="mt-3 mb-2 text-black">Choose a payment method</p>
+        <RadioGroup
+          value={formData.payment_method}
+          onValueChange={(value) =>
+            setFormData({ ...formData, payment_method: value })
+          }
+          className="flex flex-row sm:flex-row gap-4"
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="cash" id="cash" />
+            <Label htmlFor="cash">Cash</Label>
+          </div>
+          <div className="flex items-center space-x-2 mt-2">
+            <RadioGroupItem value="esewa" id="esewa" />
+            <Label htmlFor="esewa">Esewa</Label>
+          </div>
+        </RadioGroup>
+      </div>
 
       <Button type="submit" className="mt-4 w-full">
         Submit Sale
