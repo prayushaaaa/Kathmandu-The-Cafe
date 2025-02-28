@@ -30,9 +30,6 @@ function Sales() {
                   <AddSaleForm />
                 </DialogDescription>
               </DialogHeader>
-              <DialogFooter>
-                <Button type="Submit"> Add </Button>
-              </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>

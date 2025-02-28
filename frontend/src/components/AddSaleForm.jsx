@@ -4,11 +4,12 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { getItems, getCustomers, addSale, addCustomer } from "../api";
+import { LucideTrash } from "lucide-react";
 
 function AddSaleForm() {
   const [formData, setFormData] = useState({
     customer_name: "",
-    items: [{ item_id: "", quantity: 1, total_price: 0 }],
+    items: [{ id: "", quantity: 1, total_price: 0 }],
     payment_method: "cash",
   });
 
@@ -19,7 +20,6 @@ function AddSaleForm() {
     async function fetchData() {
       try {
         const itemsData = await getItems();
-        console.log(itemsData);
         const customersData = await getCustomers();
         setItems(itemsData);
         setCustomers(customersData);
@@ -35,10 +35,10 @@ function AddSaleForm() {
     const updatedItems = [...formData.items];
     updatedItems[index] = { ...updatedItems[index], [name]: value };
 
-    // Recalculate total price for the item if quantity changes
-    if (name === "quantity" || name === "item_id") {
+    // Recalculate total price for the item if quantity changes or a new item is selected
+    if (name === "quantity" || name === "id") {
       const selectedItem = items.find(
-        (item) => item.id === updatedItems[index].item_id,
+        (item) => item.id == updatedItems[index].id,
       );
       if (selectedItem) {
         updatedItems[index].total_price =
@@ -52,7 +52,7 @@ function AddSaleForm() {
   const addItemRow = () => {
     setFormData({
       ...formData,
-      items: [...formData.items, { item_id: "", quantity: 1, total_price: 0 }],
+      items: [...formData.items, { id: "", quantity: 1, total_price: 0 }],
     });
   };
 
@@ -74,22 +74,23 @@ function AddSaleForm() {
       // Prepare sale data with multiple items
       const saleData = {
         customer: customer.id,
+        payment_method: formData.payment_method,
+        // Send item data as an array of objects
         items: formData.items.map((item) => ({
-          item: item.item_id,
+          item: item.id, // Use 'id' instead of 'item_id'
           quantity: parseInt(item.quantity, 10),
           total_price: item.total_price,
         })),
-        payment_method: formData.payment_method,
       };
-
-      // Send sale data to backend (you can modify your backend API to handle multiple items per sale)
+      console.log(saleData);
+      // Send sale data to backend
       await addSale(saleData);
       alert("Sale added successfully!");
 
       // Reset form
       setFormData({
         customer_name: "",
-        items: [{ item_id: "", quantity: 1, total_price: 0 }],
+        items: [{ id: "", quantity: 1, total_price: 0 }],
         payment_method: "cash",
       });
     } catch (error) {
@@ -98,6 +99,7 @@ function AddSaleForm() {
     }
   };
 
+  // Calculate the total bill dynamically
   const calculateTotalBill = () => {
     return formData.items.reduce((total, item) => total + item.total_price, 0);
   };
@@ -133,8 +135,8 @@ function AddSaleForm() {
               <tr key={index}>
                 <td className="px-4 py-2 border">
                   <select
-                    name="item_id"
-                    value={item.item_id}
+                    name="id" // Change name from 'item_id' to 'id'
+                    value={item.id}
                     onChange={(e) => handleChange(e, index)}
                     className="w-full p-2 border rounded"
                     required
@@ -158,16 +160,20 @@ function AddSaleForm() {
                   />
                 </td>
                 <td className="px-4 py-2 border">
-                  Rs. {items.find((i) => i.id === item.item_id)?.price || 0}
+                  Rs. {items.find((i) => i.id == item.id)?.price || 0}{" "}
+                  {/* Display price per unit */}
                 </td>
-                <td className="px-4 py-2 border">Rs. {item.total_price}</td>
+                <td className="px-4 py-2 border">
+                  Rs. {item.total_price}{" "}
+                  {/* Display the total price for the item */}
+                </td>
                 <td className="px-4 py-2 border">
                   <Button
                     type="button"
                     onClick={() => removeItemRow(index)}
                     className="bg-red-500 hover:bg-red-600"
                   >
-                    Remove
+                    <LucideTrash />
                   </Button>
                 </td>
               </tr>

@@ -1,6 +1,5 @@
 import { Frame, PieChart } from "lucide-react";
 
-import { NavProjects } from "@/components/nav-projects";
 import { NavMain } from "./nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
