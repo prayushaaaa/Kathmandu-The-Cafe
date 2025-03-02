@@ -1,6 +1,8 @@
 import { Separator } from "@/components/ui/separator";
 import { Button } from "../ui/button";
 import AddSaleForm from "../AddSaleForm";
+import SalesTable from "../SalesTable";
+
 import {
   Dialog,
   DialogContent,
@@ -34,7 +36,7 @@ function Sales() {
         </div>
         <Separator className="w-full mt-3 border-gray-200 border-1" />
         <div className="mt-3">
-          <h1>Hello</h1>
+          <SalesTable />
         </div>
       </div>
     </>

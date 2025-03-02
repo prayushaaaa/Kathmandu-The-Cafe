@@ -24,3 +24,16 @@ export const addCustomer = async (customerData) =>
 
 export const addExpense = async (expenseData) =>
   axios.post(API_URL + "expenses/", expenseData).then((res) => res.data);
+
+// Delete Sale API
+export const deleteSale = async (saleId) => {
+  console.log(saleId);
+  // const csrfToken = document.cookie.match(/csrftoken=([^;]+)/)[1];
+  console.log(document.cookie);
+  axios
+    .delete(API_URL + `/sales/delete/${saleId}/`, {
+      headers: {},
+    })
+    .then((response) => console.log(response))
+    .catch((error) => console.log(error));
+};

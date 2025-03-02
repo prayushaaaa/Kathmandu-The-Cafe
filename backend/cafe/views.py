@@ -5,6 +5,8 @@ from .serializers import CustomerSerializer, ItemSerializer, SaleSerializer, Exp
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
@@ -17,8 +19,9 @@ class ItemViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
 class SaleViewSet(viewsets.ModelViewSet):
-    queryset = Sale.objects.all()
+    queryset = Sale.objects.all().order_by("-sale_date")
     serializer_class = SaleSerializer
+    permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
         customer_id = self.request.data.get('customer')
@@ -64,3 +67,14 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
     permission_classes = [AllowAny]
+
+def delete_sale(request, sale_id):
+    permission_classes = [AllowAny]
+
+    try:
+        sale = get_object_or_404(Sale, id=sale_id)
+        print(sale)
+        sale.delete()
+        return JsonResponse({"message": "Sale deleted successfully!"}, status=200)
+    except Sale.DoesNotExist:
+        return JsonResponse({"error": "Sale not found!"}, status=404)
